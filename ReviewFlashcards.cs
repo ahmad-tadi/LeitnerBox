@@ -3,9 +3,10 @@
 class ReviewFlashcards : State
 {
 	readonly Flashcard _flashcard;
+	Guid giud = Guid.NewGuid();
 	public ReviewFlashcards(LeitnerStateContext leitnerStateContext) : base(leitnerStateContext)
 	{
-		var todayAsNum = DateTime.Now.MapDateToNumber();
+        var todayAsNum = DateTime.Now.MapDateToNumber();
 		var target = _context.Flashcards
 			.Where(x => todayAsNum - x.LastReviewedDay >= x.BoxNumber)
 			.FirstOrDefault();
@@ -26,6 +27,7 @@ class ReviewFlashcards : State
 
 	protected override void Command(string command)
 	{
+        Console.WriteLine(giud);
 		var answer = command;
 		if (_flashcard is null)
 		{

@@ -1,37 +1,24 @@
 ﻿namespace Leitner;
-public class LeitnerStateContext
-{
-	public LeitnerBoxContext DbContext {  get; private set; }
-	private State _state;
-    public State State { get; set; }
-    public LeitnerStateContext(LeitnerBoxContext leitnerBoxContext)
-	{
-		DbContext = leitnerBoxContext;
-		State = new State(this);
-	}
-}
 public class State
 {
-	private State? _state;
 	protected LeitnerStateContext _stateContext;
 	protected LeitnerBoxContext _context;
-    public State(LeitnerStateContext leitnerStateContext)
+	public State(LeitnerStateContext leitnerStateContext)
 	{
 		_stateContext = leitnerStateContext;
 		_context = leitnerStateContext.DbContext;
-		_state = leitnerStateContext.State;
 	}
-	protected void SetState(State state)
+	protected void SetState(State? state)
 	{
-		_state = state;
+		_stateContext.State = state;
 	}
-	protected void SetState<T>() where T :  State
+	protected void SetState<T>() where T : State
 	{
-		_state = (T?)Activator.CreateInstance(typeof(T),_stateContext);
+		SetState((T?)Activator.CreateInstance(typeof(T), _stateContext));
 	}
 	public void Handle(string input)
 	{
-        switch (input)
+		switch (input)
 		{
 			case "1":
 				SetState<CreateFlashcard>();
@@ -50,13 +37,14 @@ public class State
 				Environment.Exit(0);
 				break;
 			default:
-				_state?.Command(input);
+				_stateContext.State?.Command(input);
 				break;
 		}
 	}
 	protected void MoveFlashcard(Flashcard flashcard, int delta)
 	{
 		// Calculate the new box number
+
 		var newBoxNumber = flashcard.BoxNumber + delta;
 
 		// Check if the new box number is valid
@@ -69,6 +57,6 @@ public class State
 	protected virtual void Command(string input)
 	{
 
-    }
+	}
 
 }
