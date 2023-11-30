@@ -7,8 +7,11 @@ public class State
 	{
 		_stateContext = leitnerStateContext;
 		_context = leitnerStateContext.DbContext;
-	}
-	protected void SetState(State? state)
+		if (!GetType().IsSubclassOf(typeof(State)))
+			Console.Write(">");
+
+    }
+    protected void SetState(State? state)
 	{
 		_stateContext.State = state;
 	}
@@ -56,7 +59,8 @@ public class State
 	}
 	protected virtual void Command(string input)
 	{
-
-	}
+        Console.WriteLine("No command found!");
+        Console.Write(">");
+    }
 
 }
