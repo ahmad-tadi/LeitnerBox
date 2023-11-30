@@ -10,7 +10,7 @@ public static class DateMapping
 		return (int)timeSpan.TotalDays;
 	}
 
-	public static DateTime MapNumberToDate(int number)
+	public static DateTime MapNumberToDate(this int number)
 	{
 		return ReferenceDate.AddDays(number);
 	}
